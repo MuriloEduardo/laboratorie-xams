@@ -1,3 +1,5 @@
+import Laboratory from '../models/Laboratory';
+
 interface ILaboratoryBody {
   name: string;
   address: string;
@@ -5,8 +7,10 @@ interface ILaboratoryBody {
 }
 
 export default class LaboratoryService {
+  constructor(protected laboratory = new Laboratory()) {}
+
   find() {
-    return [{ name: '', address: '', status: '' }];
+    return this.laboratory.find();
   }
 
   create(body: ILaboratoryBody) {

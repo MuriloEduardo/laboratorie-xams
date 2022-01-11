@@ -12,7 +12,7 @@ export default class LaboratoryController {
   }
 
   async index(req: Request, res: Response) {
-    const laboratories = this.laboratoryService.find();
+    const laboratories = await this.laboratoryService.find();
 
     return res.json(laboratories);
   }
