@@ -1,28 +1,27 @@
-import { Request, Response } from 'express';
-import EmailService from '../services/EmailService';
+import { Request, Response, Router } from 'express';
+import LaboratoryService from '../services/LaboratoryService';
 
-class LaboratoryController {
-  static async index(req: Request, res: Response) {
-    const users = [{ name: 'Murilo', email: 'murilo@gmail.com' }];
-    return res.json(users);
+export default class LaboratoryController {
+  constructor(protected laboratoryService = new LaboratoryService()) {}
+
+  register(router: Router) {
+    router
+      .route('/laboratories')
+      .get(this.index.bind(this))
+      .post(this.create.bind(this));
   }
 
-  static async create(req: Request, res: Response) {
-    const emailService = new EmailService();
+  async index(req: Request, res: Response) {
+    const laboratories = this.laboratoryService.find();
 
-    await emailService.sendMail(
-      {
-        name: 'Maria Joaquina',
-        email: 'maria@joaquina.com',
-      },
-      {
-        subject: 'Bem-vinda Maria!!!',
-        body: 'Que bom ver você aqui!',
-      }
-    );
+    return res.json(laboratories);
+  }
 
-    return res.json({ ok: true });
+  async create(req: Request, res: Response) {
+    const { body } = req;
+
+    const laboratory = await this.laboratoryService.create(body);
+
+    return res.json(laboratory);
   }
 }
-
-export default LaboratoryController;

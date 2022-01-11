@@ -1,5 +1,5 @@
 import express, { Express } from 'express';
-import routes from './routes';
+import LaboratoryController from './controllers/LaboratoryController';
 
 class App {
   public express: Express;
@@ -7,16 +7,19 @@ class App {
   constructor() {
     this.express = express();
 
-    this.middlewares();
+    this.express.use(express.json());
+
     this.routes();
   }
 
-  middlewares() {
-    this.express.use(express.json());
-  }
-
   routes() {
-    this.express.use(routes);
+    [new LaboratoryController()].forEach((route) => {
+      const router = express.Router();
+
+      route.register(router);
+
+      this.express.use(router);
+    });
   }
 }
 

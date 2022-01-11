@@ -1,3 +1,5 @@
 import App from './app';
 
-App.listen(process.env.PORT || 3333);
+setImmediate(() => {
+  App.listen(process.env.PORT || 3333);
+});

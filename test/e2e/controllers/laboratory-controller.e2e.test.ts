@@ -1,9 +1,9 @@
 import supertest from 'supertest';
-import App from '../../../src/app';
+import app from '../../../src/app';
 
 describe('LaboratoryController', () => {
   it('should return a list of active labs', async () => {
-    const { status, body } = await supertest(App).get('/laboratories');
+    const { status, body } = await supertest(app).get('/laboratories');
     expect(status).toBe(200);
     expect(body).toBe([]);
   });
