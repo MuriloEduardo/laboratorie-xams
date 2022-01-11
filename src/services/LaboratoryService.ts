@@ -1,10 +1,5 @@
 import Laboratory from '../models/Laboratory';
-
-interface ILaboratoryBody {
-  name: string;
-  address: string;
-  status: string;
-}
+import { ILaboratoryDTO } from '../dto/laboratory.dto';
 
 export default class LaboratoryService {
   constructor(protected laboratory = new Laboratory()) {}
@@ -13,7 +8,8 @@ export default class LaboratoryService {
     return this.laboratory.find();
   }
 
-  create(body: ILaboratoryBody) {
-    console.log('Email enviado', body);
+  create(laboratoryDTO: ILaboratoryDTO): boolean {
+    const inserted = !!this.laboratory.create(laboratoryDTO);
+    return inserted;
   }
 }

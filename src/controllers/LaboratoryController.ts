@@ -20,8 +20,8 @@ export default class LaboratoryController {
   async create(req: Request, res: Response) {
     const { body } = req;
 
-    const laboratory = await this.laboratoryService.create(body);
+    await this.laboratoryService.create(body);
 
-    return res.json(laboratory);
+    return res.status(204).send();
   }
 }
