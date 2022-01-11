@@ -3,7 +3,10 @@ import { env } from './src/util/env';
 export default {
   test: {
     client: 'sqlite3',
-    connection: ':memory:',
+    connection: {
+      filename: './test-db.sqlite',
+    },
+    useNullAsDefault: true,
   },
 
   development: {
