@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import UserController from './controllers/UserController';
+import LaboratoryController from './controllers/LaboratoryController';
 
 const routes = Router();
 
-routes.get('/users', UserController.index);
-routes.get('/users/create', UserController.create);
+routes.get('/laboratories', LaboratoryController.index);
+routes.get('/laboratories/create', LaboratoryController.create);
 
 export default routes;
