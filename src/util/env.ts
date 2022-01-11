@@ -7,8 +7,9 @@ const env = {
   mysqlHost: process.env.MYSQL_HOST,
   mysqlUser: process.env.MYSQL_USER,
   mysqlPassword: process.env.MYSQL_PASSWORD,
-  mysqlSchema: process.env.MYSQL_SCHEMA,
+  mysqlDatabase: process.env.MYSQL_DATABASE,
   mysqlDebug: process.env.MYSQL_DEBUG === 'true',
+  nodeEnv: process.env.NODE_ENV || 'development',
 };
 
 export { env };

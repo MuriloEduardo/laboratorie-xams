@@ -1,11 +1,11 @@
-import Mysql from '../util/mysql';
+import Database from '../util/database';
 
 export default class Laboratory {
-  constructor(protected mysql = new Mysql()) {
-    this.mysql.tableName = 'laboratory';
+  constructor(protected database = new Database()) {
+    this.database.tableName = 'laboratories';
   }
 
   find() {
-    return this.mysql.db.select();
+    return this.database.db.select();
   }
 }

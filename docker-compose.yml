@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    command: npm start
+    ports:
+      - 4000:4000
+    volumes:
+      - .:/usr/app
+  
+  db:
+    container_name: laboratorie-xams-database
+    image: mysql:8
+    ports:
+      - 3307:3306
+    environment:
+    - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
+    - MYSQL_DATABASE=${MYSQL_DATABASE}
