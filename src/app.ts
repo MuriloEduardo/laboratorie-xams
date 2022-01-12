@@ -1,4 +1,5 @@
 import express, { Express } from 'express';
+import ExamController from './controllers/ExamController';
 import LaboratoryController from './controllers/LaboratoryController';
 import AssociationController from './controllers/AssociationController';
 
@@ -14,15 +15,17 @@ class App {
   }
 
   routes() {
-    [new LaboratoryController(), new AssociationController()].forEach(
-      (route) => {
-        const router = express.Router();
+    [
+      new ExamController(),
+      new LaboratoryController(),
+      new AssociationController(),
+    ].forEach((route) => {
+      const router = express.Router();
 
-        route.register(router);
+      route.register(router);
 
-        this.express.use(router);
-      }
-    );
+      this.express.use(router);
+    });
   }
 }
 

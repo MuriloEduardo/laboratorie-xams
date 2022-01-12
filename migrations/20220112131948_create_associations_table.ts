@@ -4,18 +4,14 @@ const tableName = 'associations';
 
 export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable(tableName, function (table) {
-    table
-      .integer('exam_id')
-      .unsigned()
-      .references('id')
-      .inTable('exams')
-      .unique();
+    table.integer('exam_id').unsigned().references('id').inTable('exams');
     table
       .integer('laboratory_id')
       .unsigned()
       .references('id')
-      .inTable('laboratories')
-      .unique();
+      .inTable('laboratories');
+
+    table.unique(['exam_id', 'laboratory_id']);
   });
 }
 

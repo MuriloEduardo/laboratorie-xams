@@ -1,8 +1,14 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import AssociationService from '../services/AssociationService';
+import ExamService from '../services/ExamService';
+import LaboratoryService from '../services/LaboratoryService';
 
 export default class AssociationController {
-  constructor(protected associationService = new AssociationService()) {}
+  constructor(
+    protected examService = new ExamService(),
+    protected laboratoryService = new LaboratoryService(),
+    protected associationService = new AssociationService()
+  ) {}
 
   register(router: Router) {
     router
@@ -17,6 +23,22 @@ export default class AssociationController {
         params: { laboratory_id },
         body: { exam_id },
       } = req;
+
+      const [laboratory] = await this.laboratoryService.find({
+        id: laboratory_id,
+      });
+
+      if (!laboratory) {
+        return res.status(404).send('Laboratory not found');
+      }
+
+      const [exam] = await this.examService.find({
+        id: exam_id,
+      });
+
+      if (!exam) {
+        return res.status(404).send('Exam not found');
+      }
 
       const [association] = await this.associationService.find({
         exam_id,
