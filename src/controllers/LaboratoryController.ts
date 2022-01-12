@@ -45,15 +45,16 @@ export default class LaboratoryController {
     try {
       const {
         params: { id },
+        body,
       } = req;
-      const { body } = req;
+
       const [laboratory] = await this.laboratoryService.find({ id });
 
       if (!laboratory) {
         return res.status(404).send();
       }
 
-      const updated = !!(await this.laboratoryService.update(id, body));
+      const updated = await this.laboratoryService.update(id, body);
 
       if (!updated) {
         return res.status(500).send();

@@ -1,8 +1,11 @@
+import knex from 'knex';
 import { Chance } from 'chance';
 import supertest from 'supertest';
 import app from '../../../src/app';
+import knexfile from '../../../knexfile';
 
 const chance = new Chance();
+const database = knex(knexfile.test);
 
 describe('LaboratoryController', () => {
   describe('index', () => {
@@ -24,7 +27,13 @@ describe('LaboratoryController', () => {
 
   describe('update', () => {
     it('should update a laboratory', async () => {
-      const id = chance.integer();
+      await database('laboratories').insert({
+        name: chance.string(),
+      });
+
+      const [laboratory] = await database('laboratories');
+
+      const id = laboratory.id;
       const name = chance.string();
 
       const { status } = await supertest(app)
@@ -37,7 +46,13 @@ describe('LaboratoryController', () => {
 
   describe('delete', () => {
     it('should logically remove a laboratory', async () => {
-      const id = chance.integer();
+      await database('laboratories').insert({
+        name: chance.string(),
+      });
+
+      const [laboratory] = await database('laboratories');
+
+      const id = laboratory.id;
 
       const { status } = await supertest(app).delete(`/laboratories/${id}`);
 
