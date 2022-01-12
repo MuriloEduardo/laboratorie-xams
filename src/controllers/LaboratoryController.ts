@@ -1,5 +1,6 @@
-import { Request, Response, Router } from 'express';
+import { LaboratoryStatus } from '../dto/laboratory.dto';
 import LaboratoryService from '../services/LaboratoryService';
+import { NextFunction, Request, Response, Router } from 'express';
 
 export default class LaboratoryController {
   constructor(protected laboratoryService = new LaboratoryService()) {}
@@ -16,38 +17,78 @@ export default class LaboratoryController {
       .delete(this.remove.bind(this));
   }
 
-  async index(req: Request, res: Response) {
-    const laboratories = await this.laboratoryService.find();
+  async index(req: Request, res: Response, next: NextFunction) {
+    try {
+      const laboratories = await this.laboratoryService.find({
+        status: LaboratoryStatus.ACTIVE,
+      });
 
-    return res.json(laboratories);
+      return res.json(laboratories);
+    } catch (error) {
+      next(error);
+    }
   }
 
-  async create(req: Request, res: Response) {
-    const { body } = req;
+  async create(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { body } = req;
 
-    await this.laboratoryService.create(body);
+      await this.laboratoryService.create(body);
 
-    return res.status(204).send();
+      return res.status(204).send();
+    } catch (error) {
+      next(error);
+    }
   }
 
-  async update(req: Request, res: Response) {
-    const {
-      params: { id },
-    } = req;
-    const { body } = req;
+  async update(req: Request, res: Response, next: NextFunction) {
+    try {
+      const {
+        params: { id },
+      } = req;
+      const { body } = req;
+      const [laboratory] = await this.laboratoryService.find({ id });
 
-    await this.laboratoryService.update(id, body);
+      if (!laboratory) {
+        return res.status(404).send();
+      }
 
-    return res.status(204).send();
+      const updated = !!(await this.laboratoryService.update(id, body));
+
+      if (!updated) {
+        return res.status(500).send();
+      }
+
+      return res.status(204).send();
+    } catch (error) {
+      next(error);
+    }
   }
 
-  async remove(req: Request, res: Response) {
-    const {
-      params: { id },
-    } = req;
+  async remove(req: Request, res: Response, next: NextFunction) {
+    try {
+      const {
+        params: { id },
+      } = req;
 
-    await this.laboratoryService.delete(id);
+      const [laboratory] = await this.laboratoryService.find({
+        id,
+        status: LaboratoryStatus.ACTIVE,
+      });
 
-    return res.status(204).send();
+      if (!laboratory) {
+        return res.status(404).send();
+      }
+
+      const removed = !!(await this.laboratoryService.delete(id));
+
+      if (!removed) {
+        return res.status(500).send();
+      }
+
+      return res.status(204).send();
+    } catch (error) {
+      next(error);
+    }
   }
 }

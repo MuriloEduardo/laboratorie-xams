@@ -6,15 +6,20 @@ export default class Laboratory {
     this.database.tableName = 'laboratories';
   }
 
-  find() {
-    return this.database.db.select();
+  find(filters: Partial<ILaboratoryDTO>) {
+    return this.database.db.select().where(filters);
   }
 
   create(laboratory: ILaboratoryDTO) {
     return this.database.db.insert(laboratory);
   }
 
-  update(filters: Partial<ILaboratoryDTO>, values: Partial<ILaboratoryDTO>) {
-    return this.database.db.where(filters).update(values);
+  update(
+    filters: Partial<ILaboratoryDTO>,
+    { name, address, deleted_at }: Partial<ILaboratoryDTO>
+  ) {
+    return this.database.db
+      .where(filters)
+      .update({ name, address, deleted_at });
   }
 }
