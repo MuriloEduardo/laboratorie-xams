@@ -27,13 +27,10 @@ describe('ExamController', () => {
 
   describe('update', () => {
     it('should update a exam', async () => {
-      await database('exams').insert({
+      const [id] = await database('exams').insert({
         name: chance.string(),
       });
 
-      const [exam] = await database('exams');
-
-      const id = exam.id;
       const name = chance.string();
 
       const { status } = await supertest(app)
@@ -46,13 +43,9 @@ describe('ExamController', () => {
 
   describe('delete', () => {
     it('should logically remove a exam', async () => {
-      await database('exams').insert({
+      const [id] = await database('exams').insert({
         name: chance.string(),
       });
-
-      const [exam] = await database('exams');
-
-      const id = exam.id;
 
       const { status } = await supertest(app).delete(`/exams/${id}`);
 

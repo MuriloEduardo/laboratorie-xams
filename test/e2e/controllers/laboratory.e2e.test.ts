@@ -27,13 +27,10 @@ describe('LaboratoryController', () => {
 
   describe('update', () => {
     it('should update a laboratory', async () => {
-      await database('laboratories').insert({
+      const [id] = await database('laboratories').insert({
         name: chance.string(),
       });
 
-      const [laboratory] = await database('laboratories');
-
-      const id = laboratory.id;
       const name = chance.string();
 
       const { status } = await supertest(app)
@@ -46,13 +43,9 @@ describe('LaboratoryController', () => {
 
   describe('delete', () => {
     it('should logically remove a laboratory', async () => {
-      await database('laboratories').insert({
+      const [id] = await database('laboratories').insert({
         name: chance.string(),
       });
-
-      const [laboratory] = await database('laboratories');
-
-      const id = laboratory.id;
 
       const { status } = await supertest(app).delete(`/laboratories/${id}`);
 
