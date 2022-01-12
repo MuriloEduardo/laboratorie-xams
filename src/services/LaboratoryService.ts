@@ -1,25 +1,27 @@
-import Laboratory from '../models/Laboratory';
-import { ILaboratoryDTO, LaboratoryStatus } from '../dto/laboratory.dto';
+import { ILaboratoryDTO } from '../dto/laboratory.dto';
+import Database from '../util/database';
 
 export default class LaboratoryService {
-  constructor(protected laboratory = new Laboratory()) {}
+  constructor(protected database = new Database()) {
+    this.database.tableName = 'laboratories';
+  }
 
   find(filters?: Partial<ILaboratoryDTO>) {
-    return this.laboratory.find({
+    return this.database.db.select().where({
       ...filters,
       deleted_at: null,
     });
   }
 
   create(laboratoryDTO: ILaboratoryDTO) {
-    return this.laboratory.create(laboratoryDTO);
+    return this.database.db.insert(laboratoryDTO);
   }
 
   update(id: string, { name, address }: Partial<ILaboratoryDTO>) {
-    return this.laboratory.update({ id }, { name, address });
+    return this.database.db.where({ id }).update({ name, address });
   }
 
   delete(id: string) {
-    return this.laboratory.update({ id }, { deleted_at: new Date() });
+    return this.database.db.where({ id }).update({ deleted_at: new Date() });
   }
 }
