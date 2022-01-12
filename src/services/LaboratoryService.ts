@@ -9,7 +9,17 @@ export default class LaboratoryService {
   }
 
   create(laboratoryDTO: ILaboratoryDTO): boolean {
-    const inserted = !!this.laboratory.create(laboratoryDTO);
-    return inserted;
+    return !!this.laboratory.create(laboratoryDTO);
+  }
+
+  update(id: string, values: Partial<ILaboratoryDTO>) {
+    return this.laboratory.update({ id }, values);
+  }
+
+  delete(id: string) {
+    return this.laboratory.update(
+      { id, deleted_at: null },
+      { deleted_at: new Date() }
+    );
   }
 }

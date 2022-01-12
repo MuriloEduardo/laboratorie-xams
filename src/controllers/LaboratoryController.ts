@@ -9,6 +9,11 @@ export default class LaboratoryController {
       .route('/laboratories')
       .get(this.index.bind(this))
       .post(this.create.bind(this));
+
+    router
+      .route('/laboratories/:id')
+      .patch(this.update.bind(this))
+      .delete(this.remove.bind(this));
   }
 
   async index(req: Request, res: Response) {
@@ -21,6 +26,27 @@ export default class LaboratoryController {
     const { body } = req;
 
     await this.laboratoryService.create(body);
+
+    return res.status(204).send();
+  }
+
+  async update(req: Request, res: Response) {
+    const {
+      params: { id },
+    } = req;
+    const { body } = req;
+
+    await this.laboratoryService.update(id, body);
+
+    return res.status(204).send();
+  }
+
+  async remove(req: Request, res: Response) {
+    const {
+      params: { id },
+    } = req;
+
+    await this.laboratoryService.delete(id);
 
     return res.status(204).send();
   }

@@ -7,6 +7,7 @@ export async function up(knex: Knex): Promise<void> {
     table.increments();
     table.string('name');
     table.string('address');
+    table.timestamp('deleted_at');
     table.enum('status', ['ACTIVE', 'INACTIVE']).defaultTo('ACTIVE');
   });
 }

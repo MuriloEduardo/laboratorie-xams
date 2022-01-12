@@ -13,4 +13,8 @@ export default class Laboratory {
   create(laboratory: ILaboratoryDTO) {
     return this.database.db.insert(laboratory);
   }
+
+  update(filters: Partial<ILaboratoryDTO>, values: Partial<ILaboratoryDTO>) {
+    return this.database.db.where(filters).update(values);
+  }
 }
