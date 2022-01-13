@@ -1,5 +1,5 @@
 import Database from '../util/database';
-import { IExamDTO } from '../dto/exam.dto';
+import { IExamDTO, IUpdateCollectionExamDTO } from '../dto/exam.dto';
 
 export default class ExamService {
   constructor(protected database = new Database()) {
@@ -17,8 +17,30 @@ export default class ExamService {
     return this.database.db.insert(laboratoryDTO);
   }
 
-  update(id: string, { name, address }: Partial<IExamDTO>) {
-    return this.database.db.where({ id }).update({ name, address });
+  async update(collection: IUpdateCollectionExamDTO[]) {
+    const trx = await this.database.transaction();
+
+    try {
+      const querys = collection.map(({ id, values: { name } }) =>
+        this.database.db.where({ id }).update({ name }).transacting(trx)
+      );
+
+      const results = await Promise.all(querys);
+
+      const hasNotFounds = results?.filter((up) => up === 0);
+
+      if (hasNotFounds.length) {
+        await trx.rollback();
+
+        return;
+      }
+
+      await trx.commit();
+
+      return results;
+    } catch (error) {
+      await trx.rollback();
+    }
   }
 
   delete(id: string) {

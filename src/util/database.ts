@@ -16,11 +16,11 @@ export default class Database {
     return this._db(this._tbName);
   }
 
-  get knex() {
-    return this._db;
-  }
-
   set tableName(name: string) {
     this._tbName = name;
+  }
+
+  transaction() {
+    return this._db.transaction();
   }
 }

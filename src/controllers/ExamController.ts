@@ -12,7 +12,7 @@ export default class ExamController {
       .post(this.create.bind(this));
 
     router
-      .route('/exams/:id')
+      .route('/exams/:id?')
       .patch(this.update.bind(this))
       .delete(this.remove.bind(this));
   }
@@ -48,16 +48,14 @@ export default class ExamController {
         body,
       } = req;
 
-      const [exam] = await this.examService.find({ id });
+      const collection = id ? [{ id, values: body }] : body;
 
-      if (!exam) {
-        return res.status(404).send();
-      }
-
-      const updated = await this.examService.update(id, body);
+      const updated = await this.examService.update(collection);
 
       if (!updated) {
-        return res.status(500).send();
+        return res
+          .status(404)
+          .send('Some resources may not have been found, nothing has changed');
       }
 
       return res.status(204).send();
