@@ -16,7 +16,7 @@ export interface IExamDTO {
   deleted_at: Date | null;
 }
 
-export interface IUpdateCollectionExamDTO {
-  id: IExamDTO['id'];
+export interface IUpdateBatchExamDTO {
+  filters: Partial<IExamDTO>;
   values: Partial<IExamDTO>;
 }

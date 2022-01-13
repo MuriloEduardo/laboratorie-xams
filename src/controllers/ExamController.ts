@@ -66,21 +66,15 @@ export default class ExamController {
     try {
       const {
         params: { id },
+        body,
       } = req;
 
-      const [exam] = await this.examService.find({
-        id,
-        status: ExamStatus.ACTIVE,
-      });
-
-      if (!exam) {
-        return res.status(404).send();
-      }
-
-      const removed = !!(await this.examService.delete(id));
+      const removed = await this.examService.delete(body, id);
 
       if (!removed) {
-        return res.status(500).send();
+        return res
+          .status(404)
+          .send('Some resources may not have been found, nothing has changed');
       }
 
       return res.status(204).send();
