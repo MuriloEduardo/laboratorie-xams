@@ -17,10 +17,6 @@ export interface IExamDTO {
 }
 
 export interface IUpdateCollectionExamDTO {
-  id: string;
-  values: {
-    name: string;
-    type: ExamType;
-    status: ExamStatus;
-  };
+  id: IExamDTO['id'];
+  values: Partial<IExamDTO>;
 }

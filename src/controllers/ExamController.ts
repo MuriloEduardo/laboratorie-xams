@@ -48,9 +48,7 @@ export default class ExamController {
         body,
       } = req;
 
-      const collection = id ? [{ id, values: body }] : body;
-
-      const updated = await this.examService.update(collection);
+      const updated = await this.examService.update(body, id);
 
       if (!updated) {
         return res

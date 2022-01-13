@@ -17,8 +17,15 @@ export default class ExamService {
     return this.database.db.insert(laboratoryDTO);
   }
 
-  async update(collection: IUpdateCollectionExamDTO[]) {
+  async update(
+    exam: IUpdateCollectionExamDTO[] | Partial<IExamDTO>,
+    id?: IExamDTO['id']
+  ) {
     const trx = await this.database.transaction();
+
+    const collection = (
+      id ? [{ id, values: exam }] : exam
+    ) as IUpdateCollectionExamDTO[];
 
     try {
       const querys = collection.map(({ id, values: { name } }) =>
@@ -43,7 +50,7 @@ export default class ExamService {
     }
   }
 
-  delete(id: string) {
+  delete(id: IExamDTO['id']) {
     return this.database.db.where({ id }).update({ deleted_at: new Date() });
   }
 }
