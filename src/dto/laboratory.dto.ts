@@ -10,3 +10,8 @@ export interface ILaboratoryDTO {
   status: LaboratoryStatus;
   deleted_at: Date | null;
 }
+
+export interface IUpdateBatchLaboratoryDTO {
+  filters: Partial<ILaboratoryDTO>;
+  values: Partial<ILaboratoryDTO>;
+}

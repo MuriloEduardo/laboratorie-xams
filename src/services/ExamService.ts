@@ -29,22 +29,14 @@ export default class ExamService {
 
     try {
       const querys = collection.map(({ filters, values }) => {
+        const update = { name: values.name, deleted_at: values.deleted_at };
         const where = {
           id: filters.id,
           status: filters.status,
-          deleted_at: filters.deleted_at,
+          deleted_at: null,
         };
 
-        const whereNoUndefined = JSON.parse(JSON.stringify(where));
-
-        const update = { name: values.name, deleted_at: values.deleted_at };
-
-        const updateNoUndefined = JSON.parse(JSON.stringify(update));
-
-        return this.database.db
-          .where(whereNoUndefined)
-          .update(updateNoUndefined)
-          .transacting(trx);
+        return this.database.db.where(where).update(update).transacting(trx);
       });
 
       const results = await Promise.all(querys);
@@ -66,7 +58,7 @@ export default class ExamService {
   }
 
   delete(listIds?: IExamDTO['id'][], id?: IExamDTO['id']) {
-    const shareFilters = { status: ExamStatus.ACTIVE, deleted_at: null };
+    const status = ExamStatus.ACTIVE;
     const values = { deleted_at: new Date() };
 
     const collection = id
@@ -74,7 +66,7 @@ export default class ExamService {
           {
             filters: {
               id,
-              ...shareFilters,
+              status,
             },
             values,
           },
@@ -82,7 +74,7 @@ export default class ExamService {
       : listIds?.map((listId) => ({
           filters: {
             id: listId,
-            ...shareFilters,
+            status,
           },
           values,
         }));

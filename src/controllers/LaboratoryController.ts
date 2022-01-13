@@ -12,7 +12,7 @@ export default class LaboratoryController {
       .post(this.create.bind(this));
 
     router
-      .route('/laboratories/:id')
+      .route('/laboratories/:id?')
       .patch(this.update.bind(this))
       .delete(this.remove.bind(this));
   }
@@ -48,16 +48,10 @@ export default class LaboratoryController {
         body,
       } = req;
 
-      const [laboratory] = await this.laboratoryService.find({ id });
-
-      if (!laboratory) {
-        return res.status(404).send();
-      }
-
-      const updated = await this.laboratoryService.update(id, body);
+      const updated = await this.laboratoryService.update(body, id);
 
       if (!updated) {
-        return res.status(500).send();
+        return res.status(404).send();
       }
 
       return res.status(204).send();
@@ -70,21 +64,13 @@ export default class LaboratoryController {
     try {
       const {
         params: { id },
+        body,
       } = req;
 
-      const [laboratory] = await this.laboratoryService.find({
-        id,
-        status: LaboratoryStatus.ACTIVE,
-      });
-
-      if (!laboratory) {
-        return res.status(404).send();
-      }
-
-      const removed = !!(await this.laboratoryService.delete(id));
+      const removed = await this.laboratoryService.delete(body, id);
 
       if (!removed) {
-        return res.status(500).send();
+        return res.status(404).send();
       }
 
       return res.status(204).send();
