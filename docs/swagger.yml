@@ -1,0 +1,231 @@
+openapi: 3.0.3
+info:
+  version: 1.0.0
+  title: API Laboratorie Xams
+  description: API para manutenção de laboratórios e exames
+  contact:
+    name: API Support
+    email: murilosantoseduardo@gmail.com
+
+servers:
+  - description: Desenvolvimento
+    url: http://localhost:3333
+
+tags:
+  - name: Exam
+    description: Exames
+  - name: Laboratory
+    description: Laboratórios
+  - name: Association
+    description: Associações
+
+paths:
+  /exams:
+    get:
+      tags:
+        - Exam
+      description: Lista somente os exames ativos cadastrados
+      summary: Lista de exames ativos
+      responses:
+        200:
+          description: Listagem com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Exam'
+        500:
+          description: Erro interno do servidor
+    post:
+      tags:
+        - Exam
+      description: Criar um ou vários novos exames ativos
+      summary: Criação de exames
+      responses:
+        204:
+          description: Exames criados com sucesso
+        500:
+          description: Erro interno do servidor
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/CreateOneExam'
+                - $ref: '#/components/schemas/CreateBatchExam'
+  /exams/{id}:
+    patch:
+      tags:
+        - Exam
+      description: Editar um ou vários exames existentes
+      summary: Atualizar exames existentes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/UpdateOneExam'
+                - $ref: '#/components/schemas/UpdateBatchExam'
+      responses:
+        204:
+          description: Exames atualizados com sucesso
+        404:
+          description: Alguns recursos podem não ter sido encontrados, nada foi alterado
+        500:
+          description: Erro interno do servidor
+    delete:
+      tags:
+        - Exam
+      description: Deletar logicamente um ou vários exames ativos
+      summary: Remover logicamente exames ativos
+      parameters:
+        - in: path
+          name: id
+          description: Identificador do unico exame a ser excluido
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: integer
+                example: 1
+      responses:
+        204:
+          description: Exames removidos logicamente com sucesso
+        404:
+          description: Alguns recursos podem não ter sido encontrados, nada foi alterado
+        500:
+          description: Erro interno do servidor
+
+  /laboratories:
+    get:
+      tags:
+        - Laboratory
+      description: Lista somente os laboratórios ativos cadastrados
+      summary: Lista de laboratórios ativos
+      responses:
+    post:
+      tags:
+        - Laboratory
+      description: Criar um ou vários novos laboratórios ativos
+      summary: Criação de laboratórios
+      responses:
+  /laboratories/{id}:
+    patch:
+      tags:
+        - Laboratory
+      description: Editar um ou vários laboratórios existentes
+      summary: Atualizar laboratórios existentes
+      responses:
+        200:
+        500:
+    delete:
+      tags:
+        - Laboratory
+      description: Deletar logicamente um ou vários laboratórios ativos
+      summary: Remover logicamente laboratórios ativos
+      responses:
+        200:
+        500:
+  /laboratories/search:
+    get:
+      tags:
+        - Laboratory
+      description: Lista somente os laboratórios ativos cadastrados
+      summary: Lista de laboratórios ativos
+      responses:
+
+  /associations/{laboratory_id}:
+    post:
+      tags:
+        - Association
+      description: Associar um exame ativo à um laboratório ativo
+      summary: Associação de exames à laboratórios
+      responses:
+    delete:
+      tags:
+        - Association
+      description: Desassociar um exame ativo à um laboratório ativo
+      summary: Desassociação de exames à laboratórios
+      responses:
+components:
+  responses:
+    UnauthorizedError:
+      description: Authorization information is missing or invalid.
+  schemas:
+    Exam:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 'Maecenas auctor'
+        deleted_at:
+          type: string
+        type:
+          type: string
+        status:
+          type: string
+    CreateOneExam:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: 'Maecenas auctor'
+        type:
+          type: string
+          enum:
+            - IMAGE
+            - CLINICAL_ANALYSIS
+        status:
+          type: string
+          enum:
+            - ACTIVE
+            - INACTIVE
+    CreateBatchExam:
+      type: array
+      items:
+        $ref: '#/components/schemas/CreateOneExam'
+    UpdateOneExam:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: 'Maecenas auctor'
+        type:
+          type: string
+          enum:
+            - IMAGE
+            - CLINICAL_ANALYSIS
+        status:
+          type: string
+          enum:
+            - ACTIVE
+            - INACTIVE
+    UpdateBatchExam:
+      type: array
+      items:
+        type: object
+        properties:
+          filters:
+            type: object
+            properties:
+              id:
+                type: string
+                example: 1
+          values:
+            type: object
+            $ref: '#/components/schemas/UpdateOneExam'
