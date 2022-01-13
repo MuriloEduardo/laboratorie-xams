@@ -1,3 +1,4 @@
+import { IExamDTO } from '../dto/exam.dto';
 import { LaboratoryStatus } from '../dto/laboratory.dto';
 import LaboratoryService from '../services/LaboratoryService';
 import { NextFunction, Request, Response, Router } from 'express';
@@ -15,6 +16,8 @@ export default class LaboratoryController {
       .route('/laboratories/:id?')
       .patch(this.update.bind(this))
       .delete(this.remove.bind(this));
+
+    router.route('/laboratories/search').get(this.search.bind(this));
   }
 
   async index(req: Request, res: Response, next: NextFunction) {
@@ -74,6 +77,22 @@ export default class LaboratoryController {
       }
 
       return res.status(204).send();
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async search(req: Request, res: Response, next: NextFunction) {
+    const {
+      query: { exam_name },
+    } = req;
+
+    const exam = { name: exam_name } as Partial<IExamDTO>;
+
+    try {
+      const laboratories = await this.laboratoryService.searchByExam(exam);
+
+      return res.json(laboratories);
     } catch (error) {
       next(error);
     }

@@ -52,4 +52,39 @@ describe('LaboratoryController', () => {
       expect(status).toBe(204);
     });
   });
+
+  describe('search', () => {
+    it('should find a list of laboratories associated with the researched exam', async () => {
+      const exam_name = chance.string();
+      const laboratory_name = chance.string();
+      const laboratory_address = chance.string();
+
+      const [laboratory_id] = await database('laboratories').insert({
+        name: laboratory_name,
+        address: laboratory_address,
+      });
+
+      const [exam_id] = await database('exams').insert({
+        name: exam_name,
+      });
+
+      await database('associations').insert({
+        exam_id,
+        laboratory_id,
+      });
+
+      const { status, body } = await supertest(app)
+        .get('/laboratories/search')
+        .query({ exam_name });
+
+      expect(status).toBe(200);
+      expect(body).toMatchObject([
+        {
+          id: laboratory_id,
+          name: laboratory_name,
+          address: laboratory_address,
+        },
+      ]);
+    });
+  });
 });

@@ -4,6 +4,7 @@ import {
   LaboratoryStatus,
 } from '../dto/laboratory.dto';
 import Database from '../util/database';
+import { IExamDTO } from '../dto/exam.dto';
 
 export default class LaboratoryService {
   constructor(protected database = new Database()) {
@@ -88,5 +89,18 @@ export default class LaboratoryService {
         }));
 
     return this.update(collection!);
+  }
+
+  searchByExam(exam: Partial<IExamDTO>) {
+    return this.database.db
+      .select(
+        'laboratories.id',
+        'laboratories.name',
+        'laboratories.address',
+        'laboratories.status'
+      )
+      .join('associations', 'laboratories.id', 'associations.laboratory_id')
+      .join('exams', 'associations.exam_id', 'exams.id')
+      .where('exams.name', exam.name);
   }
 }
