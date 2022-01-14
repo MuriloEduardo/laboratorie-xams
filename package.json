@@ -2,10 +2,10 @@
   "name": "laboratorie-xams",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/server.js",
+  "main": "dist/src/server.js",
   "scripts": {
     "build": "rimraf dist && tsc",
-    "start": "node dist/server.js",
+    "start": "node dist/src/server.js",
     "test": "npm run test:unit && npm run test:e2e",
     "test:unit": "jest --config ./test/unit/jest.config.json",
     "pretest:e2e": "NODE_ENV=test npx knex migrate:rollback && NODE_ENV=test npx knex migrate:latest",

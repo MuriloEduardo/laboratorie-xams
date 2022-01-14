@@ -2,16 +2,15 @@ version: '3.8'
 
 services:
   app:
+    container_name: laboratorie-xams-app
     build: .
-    command: npm start
     ports:
-      - 4000:4000
+      - 3333:3333
     volumes:
       - .:/usr/app
   
   db:
-    container_name: laboratorie-xams-database
-    image: mysql:8
+    image: mysql:latest
     ports:
       - 3307:3306
     environment:
