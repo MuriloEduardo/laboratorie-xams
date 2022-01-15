@@ -7,7 +7,7 @@ export default class ExamService {
   }
 
   find(filters?: Partial<IExamDTO>) {
-    return this.database.db.select().where({
+    return this.database.db.select('id', 'name', 'type', 'status').where({
       ...filters,
       deleted_at: null,
     });
@@ -30,11 +30,15 @@ export default class ExamService {
     try {
       const querys = collection.map(({ filters, values }) => {
         const update = { name: values.name, deleted_at: values.deleted_at };
-        const where = {
+
+        let where: Partial<IExamDTO> = {
           id: filters.id,
-          status: filters.status,
           deleted_at: null,
         };
+
+        if (filters.status) {
+          where = { ...where, status: filters.status };
+        }
 
         return this.database.db.where(where).update(update).transacting(trx);
       });

@@ -54,7 +54,7 @@ export default class AssociationController {
         laboratory_id,
       });
 
-      return res.status(200).send();
+      return res.status(204).send();
     } catch (error) {
       next(error);
     }
@@ -76,7 +76,7 @@ export default class AssociationController {
         return res.status(404).send();
       }
 
-      return res.status(200).send();
+      return res.status(204).send();
     } catch (error) {
       next(error);
     }

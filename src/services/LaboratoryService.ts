@@ -12,7 +12,7 @@ export default class LaboratoryService {
   }
 
   find(filters?: Partial<ILaboratoryDTO>) {
-    return this.database.db.select().where({
+    return this.database.db.select('id', 'name', 'address', 'status').where({
       ...filters,
       deleted_at: null,
     });
@@ -39,11 +39,15 @@ export default class LaboratoryService {
           address: values.address,
           deleted_at: values.deleted_at,
         };
-        const where = {
+
+        let where: Partial<ILaboratoryDTO> = {
           id: filters.id,
-          status: filters.status,
           deleted_at: null,
         };
+
+        if (filters.status) {
+          where = { ...where, status: filters.status };
+        }
 
         return this.database.db.where(where).update(update).transacting(trx);
       });

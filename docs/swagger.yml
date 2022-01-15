@@ -28,7 +28,7 @@ paths:
       summary: Lista de exames ativos
       responses:
         200:
-          description: Listagem com sucesso
+          description: Exames listados com sucesso
           content:
             application/json:
               schema:
@@ -54,37 +54,11 @@ paths:
               oneOf:
                 - $ref: '#/components/schemas/CreateOneExam'
                 - $ref: '#/components/schemas/CreateBatchExam'
-  /exams/{id}:
-    patch:
-      tags:
-        - Exam
-      description: Editar um ou vários exames existentes
-      summary: Atualizar exames existentes
-      requestBody:
-        content:
-          application/json:
-            schema:
-              oneOf:
-                - $ref: '#/components/schemas/UpdateOneExam'
-                - $ref: '#/components/schemas/UpdateBatchExam'
-      responses:
-        204:
-          description: Exames atualizados com sucesso
-        404:
-          description: Alguns recursos podem não ter sido encontrados, nada foi alterado
-        500:
-          description: Erro interno do servidor
     delete:
       tags:
         - Exam
-      description: Deletar logicamente um ou vários exames ativos
-      summary: Remover logicamente exames ativos
-      parameters:
-        - in: path
-          name: id
-          description: Identificador do unico exame a ser excluido
-          schema:
-            type: integer
+      description: Deletar logicamente varios exames ativos
+      summary: Remover vários exames ativos
       requestBody:
         content:
           application/json:
@@ -92,10 +66,74 @@ paths:
               type: array
               items:
                 type: integer
-                example: 1
+              example:
+                - 1
+                - 3
+                - 8
       responses:
         204:
           description: Exames removidos logicamente com sucesso
+        404:
+          description: Alguns recursos podem não ter sido encontrados, nada foi alterado
+        500:
+          description: Erro interno do servidor
+    patch:
+      tags:
+        - Exam
+      description: Editar vários exames existentes
+      summary: Atualizar exames existentes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBatchExam'
+      responses:
+        204:
+          description: Exames atualizados com sucesso
+        404:
+          description: Alguns recursos podem não ter sido encontrados, nada foi alterado
+        500:
+          description: Erro interno do servidor      
+  /exams/{id}:
+    patch:
+      tags:
+        - Exam
+      description: Editar um exame existente
+      summary: Atualizar exame existente
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Identificador do unico exame a ser atualizado
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOneExam'
+      responses:
+        204:
+          description: Exame atualizado com sucesso
+        404:
+          description: Alguns recursos podem não ter sido encontrados, nada foi alterado
+        500:
+          description: Erro interno do servidor
+    delete:
+      tags:
+        - Exam
+      description: Deletar logicamente um exame ativo
+      summary: Remover exame ativo
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Identificador do unico exame a ser excluido
+          schema:
+            type: integer
+      responses:
+        204:
+          description: Exame removido com sucesso
         404:
           description: Alguns recursos podem não ter sido encontrados, nada foi alterado
         500:
@@ -108,36 +146,108 @@ paths:
       description: Lista somente os laboratórios ativos cadastrados
       summary: Lista de laboratórios ativos
       responses:
+        200:
+          description: Laboratórios listados com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Laboratory'
+        500:
+          description: Erro interno do servidor
     post:
       tags:
         - Laboratory
       description: Criar um ou vários novos laboratórios ativos
       summary: Criação de laboratórios
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/CreateOneLaboratory'
+                - $ref: '#/components/schemas/CreateBatchLaboratory'
       responses:
+        204:
+          description: Laboratórios criados com sucesso
+        500:
+          description: Erro interno do servidor
+    patch:
+      tags:
+        - Laboratory
+      description: Editar vários laboratórios existentes
+      summary: Atualizar laboratórios existentes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBatchLaboratory'
+      responses:
+        204:
+          description: Laboratórios atualizados com sucesso
+        500:
+          description: Erro interno do servidor
+    delete:
+      tags:
+        - Laboratory
+      description: Deletar logicamente vários laboratórios ativos
+      summary: Remover laboratórios ativos
+      responses:
+        204:
+          description: Laboratórios removidos com sucesso
+        500:
+          description: Erro interno do servidor
   /laboratories/{id}:
     patch:
       tags:
         - Laboratory
-      description: Editar um ou vários laboratórios existentes
-      summary: Atualizar laboratórios existentes
+      description: Editar um laboratório existente
+      summary: Atualizar laboratório existente
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOneLaboratory'
       responses:
-        200:
+        204:
+          description: Laboratório atualizado com sucesso
         500:
+          description: Erro interno do servidor
     delete:
       tags:
         - Laboratory
-      description: Deletar logicamente um ou vários laboratórios ativos
-      summary: Remover logicamente laboratórios ativos
+      description: Deletar logicamente um laboratório ativo
+      summary: Remover laboratório ativo
       responses:
-        200:
+        204:
+          description: Laboratório removido com sucesso
         500:
+          description: Erro interno do servidor
   /laboratories/search:
     get:
       tags:
         - Laboratory
       description: Lista somente os laboratórios ativos cadastrados
       summary: Lista de laboratórios ativos
+      parameters:
+        - in: query
+          name: exam_name
+          required: true
+          schema:
+            type: string
+          description: Nome do exame vinculado aos laboratórios a serem listados
       responses:
+        200:
+          description: Laboratórios encontrados listados com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Laboratory'
+        500:
+          description: Erro interno do servidor
 
   /associations/{laboratory_id}:
     post:
@@ -145,80 +255,97 @@ paths:
         - Association
       description: Associar um exame ativo à um laboratório ativo
       summary: Associação de exames à laboratórios
+      parameters:
+        - in: path
+          name: laboratory_id
+          schema:
+            type: integer
+          required: true
+          description: Identificador do laboratório a ser vinculado
       responses:
+        204:
+          description: Associação efetuada com sucesso
+        500:
+          description: Erro interno do servidor
     delete:
       tags:
         - Association
       description: Desassociar um exame ativo à um laboratório ativo
       summary: Desassociação de exames à laboratórios
+      parameters:
+        - in: path
+          name: laboratory_id
+          schema:
+            type: integer
+          required: true
+          description: Identificador do laboratório a ser desvinculado
       responses:
+        204:
+          description: Desassociação efetuada com sucesso
+        500:
+          description: Erro interno do servidor
 components:
-  responses:
-    UnauthorizedError:
-      description: Authorization information is missing or invalid.
   schemas:
     Exam:
       type: object
       required:
         - id
         - name
+        - type
+        - status
       properties:
         id:
           type: integer
           example: 1
         name:
           type: string
-          example: 'Maecenas auctor'
-        deleted_at:
-          type: string
-        type:
-          type: string
-        status:
-          type: string
-    CreateOneExam:
-      type: object
-      required:
-        - name
-      properties:
-        name:
-          type: string
-          example: 'Maecenas auctor'
+          example: Maecenas auctor
         type:
           type: string
           enum:
-            - IMAGE
             - CLINICAL_ANALYSIS
+            - IMAGE
         status:
           type: string
           enum:
             - ACTIVE
             - INACTIVE
+    CreateOneExam:
+      type: object
+      required:
+        - name
+        - type
+      properties:
+        name:
+          type: string
+          example: Maecenas auctor
+        type:
+          type: string
+          enum:
+            - IMAGE
+            - CLINICAL_ANALYSIS
     CreateBatchExam:
       type: array
       items:
         $ref: '#/components/schemas/CreateOneExam'
     UpdateOneExam:
       type: object
-      required:
-        - name
       properties:
         name:
           type: string
-          example: 'Maecenas auctor'
+          example: Maecenas auctor
         type:
           type: string
           enum:
             - IMAGE
             - CLINICAL_ANALYSIS
-        status:
-          type: string
-          enum:
-            - ACTIVE
-            - INACTIVE
     UpdateBatchExam:
       type: array
       items:
         type: object
+        required:
+          - filters
+          - values
         properties:
           filters:
             type: object
@@ -229,3 +356,68 @@ components:
           values:
             type: object
             $ref: '#/components/schemas/UpdateOneExam'
+    Laboratory:
+      type: object
+      required:
+        - id
+        - name
+        - address
+        - status
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Sed Pharetra Felis
+        address:
+          type: string
+          example: Aliquam venenatis efficitur leo id luctus
+        status:
+          type: string
+          enum:
+            - ACTIVE
+            - INACTIVE
+    CreateOneLaboratory:
+      type: object
+      required:
+        - name
+        - address
+      properties:
+        name:
+          type: string
+          example: Sed Pharetra Felis
+        address:
+          type: string
+          example: Aliquam venenatis efficitur leo id luctus
+    CreateBatchLaboratory:
+      type: array
+      items:
+        type: object
+        $ref: '#/components/schemas/CreateOneLaboratory'
+    UpdateOneLaboratory:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Sed Pharetra Felis
+        address:
+          type: string
+          example: Aliquam venenatis efficitur leo id luctus
+    UpdateBatchLaboratory:
+      type: array
+      items:
+        type: object
+        required:
+          - filters
+          - values
+        properties:
+          filters:
+            type: object
+            properties:
+              id:
+                type: string
+                example: 1
+          values:
+            type: object
+            $ref: '#/components/schemas/UpdateOneLaboratory'

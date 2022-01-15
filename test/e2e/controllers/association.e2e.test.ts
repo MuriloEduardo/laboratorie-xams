@@ -24,7 +24,7 @@ describe('AssociationController', () => {
           exam_id,
         });
 
-      expect(status).toBe(200);
+      expect(status).toBe(204);
     });
   });
 
@@ -49,7 +49,7 @@ describe('AssociationController', () => {
           exam_id,
         });
 
-      expect(status).toBe(200);
+      expect(status).toBe(204);
     });
   });
 });
