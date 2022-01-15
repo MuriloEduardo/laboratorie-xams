@@ -1,3 +1,4 @@
+import cors from 'cors';
 import express, { Express } from 'express';
 import ExamController from './controllers/ExamController';
 import LaboratoryController from './controllers/LaboratoryController';
@@ -9,6 +10,7 @@ class App {
   constructor() {
     this.express = express();
 
+    this.express.use(cors());
     this.express.use(express.json());
 
     this.routes();
