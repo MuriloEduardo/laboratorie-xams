@@ -2,6 +2,5 @@
   "preset": "ts-jest",
   "testEnvironment": "node",
   "displayName": "end2end-tests",
-  "testMatch": ["./**/*.test.ts"],
-  "setupFilesAfterEnv": ["./setup.ts"]
+  "testMatch": ["./**/*.test.ts"]
 }

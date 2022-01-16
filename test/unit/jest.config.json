@@ -1,6 +1,7 @@
 {
   "clearMocks": true,
   "preset": "ts-jest",
+  "rootDir": "../..",
   "testEnvironment": "node",
   "displayName": "unit-tests",
   "testMatch": ["./**/*.test.ts"]
