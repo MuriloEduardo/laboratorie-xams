@@ -4,5 +4,7 @@
   "rootDir": "../..",
   "testEnvironment": "node",
   "displayName": "unit-tests",
-  "testMatch": ["./**/*.test.ts"]
+  "testMatch": ["./**/*.unit.test.ts"],
+  "collectCoverage": true,
+  "coverageReporters": ["json", "text", "lcov", "clover"]
 }
