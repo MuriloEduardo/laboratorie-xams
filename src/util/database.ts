@@ -1,6 +1,6 @@
 import { env } from './env';
 import knex, { Knex } from 'knex';
-import knexfile from '../../knexfile';
+const knexfile = require('../../knexfile');
 
 export default class Database {
   private config =
