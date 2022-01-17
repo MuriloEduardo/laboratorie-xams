@@ -1,6 +1,18 @@
 import { env } from './src/util/env';
 
-module.exports = {
+const defaultConnection = {
+  client: 'mysql2',
+  debug: env.mysqlDebug || false,
+  connection: {
+    host: env.mysqlHost,
+    port: env.mysqlPort,
+    user: env.mysqlUser,
+    password: env.mysqlPassword,
+    database: env.mysqlDatabase,
+  },
+};
+
+export default {
   test: {
     client: 'sqlite3',
     connection: {
@@ -8,16 +20,6 @@ module.exports = {
     },
     useNullAsDefault: true,
   },
-
-  development: {
-    client: 'mysql2',
-    debug: env.mysqlDebug || false,
-    connection: {
-      host: env.mysqlHost,
-      port: env.mysqlPort,
-      user: env.mysqlUser,
-      password: env.mysqlPassword,
-      database: env.mysqlDatabase,
-    },
-  },
+  development: defaultConnection,
+  production: defaultConnection,
 };
