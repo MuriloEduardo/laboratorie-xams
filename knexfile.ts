@@ -1,6 +1,6 @@
 import { env } from './src/util/env';
 
-export default {
+module.exports = {
   test: {
     client: 'sqlite3',
     connection: {
